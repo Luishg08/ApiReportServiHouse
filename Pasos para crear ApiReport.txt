@@ -16,9 +16,6 @@ Environment:
 crear archivo .env
 
 Pasos para correr ApiReport:
-TENER DOCKER INSTALADO
+TENER DOCKER INSTALADO y DOCKER DESKTOP CORRIENDO
 Clonar git clone  -b development https://github.com/Luishg08/ApiReportServiHouse.git
-py -m venv venv
-source venv/scripts/activate
-pip install -r requirements.txt
 docker-compose up --build

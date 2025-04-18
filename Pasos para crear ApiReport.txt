@@ -15,8 +15,6 @@ Crear archivo Dockerfile
 Environment:
 crear archivo .env
 
-
 Pasos para correr ApiReport:
 Clonar git clone  -b development https://github.com/Luishg08/ApiReportServiHouse.git
 docker-compose up --build
-

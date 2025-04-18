@@ -1,0 +1,22 @@
+
+Creación de ApiReport:
+py -m venv venv --> Crear entorno virtual para instalar librerías aisladas del sistema
+source venv/scripts/activate --> Activar el entorno creado 
+pip install fastapi uvicorn --> Inicializar el proyecto con FastAPI 
+crear archivo main.py con endpoint sencillo get
+uvicorn main:app --reload --port 8088 --host 0.0.0.0 --> Correr ApiReport puerto 8088, host 0.0.0.0 para ser accesible desde cualquier ip, reload para aplicar cambios instantáneamente
+
+Dockerizar:
+Crear archivo Dockerfile
+ pip freeze > requirements.txt --> crear archivo de texto con dependencias de ApiReport
+ docker build -t apireport . -->  Construir imagen de Docker, nombre ApiReport el punto (.) indica utilizar DockerFile del directorio actual
+ crear docker-compose.yml
+
+Environment:
+crear archivo .env
+
+
+Pasos para correr ApiReport:
+Clonar git clone  -b development https://github.com/Luishg08/ApiReportServiHouse.git
+docker-compose up --build
+

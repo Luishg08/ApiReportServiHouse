@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  apireport:
+    build: .
+    container_name: apireport-container
+    ports:
+      - "8088:8088"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - MONGO_URL=${MONGO_URL}

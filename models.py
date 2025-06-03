@@ -8,12 +8,14 @@ from datetime import datetime
 class Order(Base):
     __tablename__ = "Order"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    order_number = Column(String, nullable=False)
+    order_number = Column(String, nullable=False, unique=True)
     delivery_id = Column(Integer, ForeignKey("Delivery.id"))
     final_address_id = Column(Integer, ForeignKey("Location.id"))
     state = Column(String, default="PENDING")
     createdAt = Column(DateTime, default=datetime.utcnow)
     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
     stockTransactions = relationship("StockTransaction", back_populates="order")
     delivery = relationship("Delivery", back_populates="orders")
     final_address = relationship("Location", foreign_keys=[final_address_id], back_populates="orders")
@@ -52,6 +54,8 @@ class Delivery(Base):
     user_id = Column(String, nullable=True)
     full_name = Column(String, nullable=False)
     location_id = Column(Integer, ForeignKey("Location.id"))
+    email = Column(String, nullable=True)
+    pending_orders = Column(Integer, default=0)
     orders = relationship("Order", back_populates="delivery")
     location = relationship("Location", back_populates="deliveries")
 
@@ -101,7 +105,7 @@ class Storage(Base):
 class Manager(Base):
     __tablename__ = "Manager"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(String, nullable=True)
+    user_id = Column(String, unique=True, nullable=True)
     full_name = Column(String)
     state = Column(String, default="ACTIVE")
     email = Column(String, unique=True)

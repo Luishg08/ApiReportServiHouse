@@ -1,12 +1,29 @@
 import webbrowser 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+from models import Base, Order, Stock, StockTransaction, Delivery, Location
+
+
+#No se requieren crear las tablas.
 
 app = FastAPI()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 # Prueba para verificar que FastAPI está funcionando bien
 @app.get("/TestApiReport")
 def read_root():
     return {"message": "Hola desde ApiReport"}
+
+
+
 
 
 if __name__ == "__main__":

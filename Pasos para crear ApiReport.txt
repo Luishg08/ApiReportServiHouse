@@ -4,7 +4,7 @@ py -m venv venv --> Crear entorno virtual para instalar librerías aisladas del 
 source venv/scripts/activate --> Activar el entorno creado 
 pip install fastapi uvicorn --> Inicializar el proyecto con FastAPI 
 crear archivo main.py con endpoint sencillo get
-uvicorn main:app --reload --port 8088 --host 0.0.0.0 --> Correr ApiReport puerto 8088, host 0.0.0.0 para ser accesible desde cualquier ip, reload para aplicar cambios instantáneamente
+uvicorn main:app --reload --port 8088 --> Correr ApiReport puerto 8088, host 0.0.0.0 para ser accesible desde cualquier ip, reload para aplicar cambios instantáneamente
 
 Dockerizar:
 Crear archivo Dockerfile

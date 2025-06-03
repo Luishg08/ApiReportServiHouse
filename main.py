@@ -11,10 +11,19 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 from datetime import datetime, date
+from fastapi.middleware.cors import CORSMiddleware
 
 #No se requieren crear las tablas.
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cambia esto por ["http://localhost:3000"] en producción
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     db = SessionLocal()
@@ -72,7 +81,7 @@ def write_pdf_header(p, y, title):
     p.drawString(470, y, "Delivery User ID")
     return y - 10
 
-@app.get("/report/delivery/{idDelivery}/excel")
+@app.get("/api/report/delivery/{idDelivery}/excel")
 def report_delivery_excel(idDelivery: int, db: Session = Depends(get_db)):
     orders = get_delivered_orders_query(db, idDelivery=idDelivery, today_only=True)
     wb = openpyxl.Workbook()
@@ -85,7 +94,7 @@ def report_delivery_excel(idDelivery: int, db: Session = Depends(get_db)):
     format_excel(ws)
     for order, delivery in orders:
         recipient = getattr(order, "recipient", None)  # Ajusta si tienes destinatario
-        recipient_email = getattr(recipient, "email", "")
+        recipient_email = getattr(order, "email", "")
         address = getattr(order.final_address, "address", "") if order.final_address else ""
         products = order.stockTransactions if hasattr(order, "stockTransactions") else []
         first = True
@@ -123,7 +132,7 @@ def report_delivery_excel(idDelivery: int, db: Session = Depends(get_db)):
         headers={"Content-Disposition": f"attachment; filename=delivery_{idDelivery}_today.xlsx"}
     )
 
-@app.get("/report/delivery/{idDelivery}/pdf")
+@app.get("/api/report/delivery/{idDelivery}/pdf")
 def report_delivery_pdf(idDelivery: int, db: Session = Depends(get_db)):
     orders = get_delivered_orders_query(db, idDelivery=idDelivery, today_only=True)
     buffer = io.BytesIO()
@@ -178,7 +187,7 @@ def report_delivery_pdf(idDelivery: int, db: Session = Depends(get_db)):
     )
 
 
-@app.get("/report/all/excel")
+@app.get("/api/report/all/excel")
 def report_all_excel(db: Session = Depends(get_db)):
     orders = get_delivered_orders_query(db)
     wb = openpyxl.Workbook()
@@ -190,7 +199,7 @@ def report_all_excel(db: Session = Depends(get_db)):
     ])
     format_excel(ws)
     for order, delivery in orders:
-        recipient_email = getattr(recipient, "email", "")
+        recipient_email = getattr(order, "email", "")
         address = getattr(order.final_address, "address", "") if order.final_address else ""
         products = order.stockTransactions if hasattr(order, "stockTransactions") else []
         first = True
@@ -229,7 +238,7 @@ def report_all_excel(db: Session = Depends(get_db)):
         headers={"Content-Disposition": "attachment; filename=all_delivered_orders.xlsx"}
     )
 
-@app.get("/report/all/pdf")
+@app.get("/api/report/all/pdf")
 def report_all_pdf(db: Session = Depends(get_db)):
     orders = get_delivered_orders_query(db)
     buffer = io.BytesIO()
